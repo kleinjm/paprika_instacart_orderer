@@ -1,0 +1,46 @@
+AllCops:
+  Exclude:
+    - ./db/schema.rb
+
+Metrics/LineLength:
+  Max: 80
+  Exclude:
+    - config/initializers/devise.rb
+
+Style/Documentation:
+  Enabled: false
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+  Enabled: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  ConsistentQuotesInMultiline: true
+  Enabled: true
+
+Style/LambdaCall:
+  Enabled: false
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/WordArray:
+  EnforcedStyle: percent
+
+Metrics/BlockLength:
+  Exclude:
+    - ./**/*_spec*.rb
+    - config/routes.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - db/migrate/*.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*.rb
+
+Metrics/AbcSize:
+  Exclude:
+    - db/migrate/*.rb
