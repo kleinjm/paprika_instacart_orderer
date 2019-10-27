@@ -1,5 +1,7 @@
 {
   "name": "paprika_instacart_orderer",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "paprika-api": "^1.0.3"
+  }
 }

@@ -1,22 +1,19 @@
 # frozen_string_literal: true
 
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
-  # GET /orders
-  # GET /orders.json
   def index
     @orders = Order.all
   end
 
-  # GET /orders/1
-  # GET /orders/1.json
-  def show; end
+  def show
+    @order = Order.find(params[:id])
+  end
 
-  # POST /orders
-  # POST /orders.json
   def create
-    @order = Order.new(order_params)
+    # Run with DEBUG=true for some more stats
+    @order = GroceryOrderer.new(user: current_user)
 
     respond_to do |format|
       if @order.save
@@ -31,11 +28,5 @@ class OrdersController < ApplicationController
         end
       end
     end
-  end
-
-  private
-
-  def set_order
-    @order = Order.find(params[:id])
   end
 end
