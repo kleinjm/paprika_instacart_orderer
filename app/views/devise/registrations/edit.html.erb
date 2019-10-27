@@ -25,6 +25,8 @@
     <%= f.label :password_confirmation %><br />
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
+  <br />
+  <br />
 
   <div class="field">
     <%= f.label :paprika_email %> <br />
@@ -36,21 +38,25 @@
     <%= f.password_field :paprika_password %>
   </div>
 
-  <!-- <div class="field"> -->
-  <!--   <%= f.label :instacart_email %> <br /> -->
-  <!--   <%= f.email_field :instacart_email %> -->
-  <!-- </div> -->
-  <!--  -->
-  <!-- <div class="field"> -->
-  <!--   <%= f.label :instacart_password %> <br /> -->
-  <!--   <%= f.password_field :instacart_password %> -->
-  <!-- </div> -->
-  <!--  -->
-  <!-- <div class="field"> -->
-  <!--   <%= f.label :instacart_default_store %> <br /> -->
-  <!--   <%= f.text_field :instacart_default_store %> -->
-  <!-- </div> -->
+  <br />
+  <br />
+  <div class="field">
+    <%= f.label :instacart_email %> <br />
+    <%= f.email_field :instacart_email %>
+  </div>
 
+  <div class="field">
+    <%= f.label :instacart_password %> <br />
+    <%= f.password_field :instacart_password %>
+  </div>
+
+  <div class="field">
+    <%= f.label :instacart_default_store %> <br />
+    <%= f.text_field :instacart_default_store %>
+  </div>
+
+  <br />
+  <br />
   <div class="field">
     <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
     <%= f.password_field :current_password, autocomplete: "current-password" %>
