@@ -31,7 +31,7 @@ class GroceryOrderer
     ordered_items = []
 
     unpurchased_groceries.each do |grocery|
-    # [unpurchased_groceries.first].each do |grocery|
+      # [unpurchased_groceries.first].each do |grocery|
       ordered_items << order_grocery(grocery: grocery)
     end
     ordered_items.flatten
