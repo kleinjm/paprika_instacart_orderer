@@ -38,4 +38,7 @@ chdir APP_ROOT do
 
   puts "\n== Precommit install =="
   system! "pre-commit install"
+
+  puts "\n== Yarn =="
+  system! "yarn install"
 end

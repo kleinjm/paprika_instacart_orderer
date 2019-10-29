@@ -15,7 +15,6 @@ gem "puma", "~> 3.11"
 gem "rails", "~> 5.2.3"
 gem "rubocop"
 gem "sass-rails", "~> 5.0"
-gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development, :test do
   gem "pre-commit"
@@ -32,6 +31,7 @@ group :development do
 end
 
 group :test do
+  gem "factory_bot_rails"
   gem "rspec-rails"
   gem "simplecov", require: false
   gem "webmock"

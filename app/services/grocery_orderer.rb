@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 require "instacart_api"
-require_relative "./grocery_importer"
-require_relative "./models/failure"
-require_relative "./item_selector"
-require_relative "./order_recorder"
-require_relative "./quantity_computer"
 
 class GroceryOrderer
   def initialize(user:)
@@ -15,10 +10,6 @@ class GroceryOrderer
 
   def call
     ordered_items = order_groceries
-
-    # TODO: record and print out the grocery to item mapping to help spot
-    # check what was ordered. Include quantity
-    OrderRecorder.record_items(items: ordered_items)
 
     report_errors
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "instacart_api"
+require "rails_helper"
 
 RSpec.describe QuantityComputer do
   describe "#call" do

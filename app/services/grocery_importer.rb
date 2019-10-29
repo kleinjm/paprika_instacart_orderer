@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 require "json"
-require_relative "./models/grocery"
 
 class GroceryImporter
+  GROCERIES_JSON =
+    if Rails.env.test?
+      Rails.root.join("spec", "support", "sample_data", "groceries.json")
+    else
+      Rails.root.join("tmp", "groceries.json")
+    end
+
   class << self
     def call
-      `node ./paprika_api/fetch-groceries.js`
+      `node #{js_import_file}`
 
-      raw_file = File.read("./tmp/groceries.json")
+      raw_file = File.read(GROCERIES_JSON)
       JSON.parse(raw_file).map do |grocery_json|
         Grocery.new(grocery_json)
       end
@@ -21,8 +27,14 @@ class GroceryImporter
 
     private
 
+    def js_import_file
+      Rails.root.join("lib", "fetch-groceries.js")
+    end
+
     def delete_grocery_file
-      File.delete("./tmp/groceries.json")
+      return if Rails.env.test?
+
+      File.delete(GROCERIES_JSON)
     rescue Errno::ENOENT => e
       handle_missing_groceries(error: e)
     end
