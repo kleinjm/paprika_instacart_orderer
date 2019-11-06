@@ -10,9 +10,11 @@ class GroceryImporter
       Rails.root.join("tmp", "groceries.json")
     end
 
+  JS_FETCH_GROCERIES_SCRIPT = Rails.root.join("lib", "fetch-groceries.js")
+
   class << self
     def call
-      `node #{js_import_file}`
+      generate_groceries_json
 
       raw_file = File.read(GROCERIES_JSON)
       JSON.parse(raw_file).map do |grocery_json|
@@ -27,8 +29,16 @@ class GroceryImporter
 
     private
 
-    def js_import_file
-      Rails.root.join("lib", "fetch-groceries.js")
+    def generate_groceries_json
+      if Rails.env.production?
+        raise "Node not configured to run #{JS_FETCH_GROCERIES_SCRIPT}"
+      end
+
+      node_version = File.read(".nvmrc").strip
+
+      # rubocop:disable Metrics/LineLength
+      `$HOME/.nvm/versions/node/v#{node_version}/bin/node #{JS_FETCH_GROCERIES_SCRIPT}`
+      # rubocop:enable Metrics/LineLength
     end
 
     def delete_grocery_file

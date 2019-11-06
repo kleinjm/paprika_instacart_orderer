@@ -3,15 +3,11 @@
 %table
   %thead
     %tr
-      %th Ordered items
-      %th Recipe ingredients
-      %th{:colspan => "3"}
+      %th Orders
   %tbody
     - @orders.each do |order|
       %tr
-        %td= order.ordered_items
-        %td= order.recipe_ingredients
-        %td= link_to 'Show', order
+        %td= link_to order.created_at, order
 %br/
 = form_tag orders_path do
   = submit_tag "Order groceries"

@@ -9,11 +9,9 @@
   %body
     %nav
       - if user_signed_in?
-        %li
-          = button_to('Logout', destroy_user_session_path, method: :delete)
-          = current_user.email
-          = link_to "Account settings", edit_user_registration_path
+        = button_to('Logout', destroy_user_session_path, method: :delete)
+        = current_user.email
+        = link_to "Account settings", edit_user_registration_path
       - else
-        %li
-          = link_to('Login', new_user_session_path)
+        = link_to('Login', new_user_session_path)
     = yield

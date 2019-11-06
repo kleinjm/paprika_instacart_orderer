@@ -2,6 +2,7 @@
 
 require "instacart_api"
 
+# Run with DEBUG=true for some more stats
 class GroceryOrderer
   def initialize(user:)
     @user = user
@@ -9,14 +10,16 @@ class GroceryOrderer
   end
 
   def call
+    @order = Order.create(user_id: user.id)
     order_groceries
 
     report_errors
+    order
   end
 
   private
 
-  attr_reader :failures, :user
+  attr_reader :failures, :user, :order
 
   def order_groceries
     ordered_items = []

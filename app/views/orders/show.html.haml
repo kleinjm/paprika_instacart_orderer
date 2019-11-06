@@ -1,10 +1,11 @@
 %p#notice= notice
-%p
-  %strong Ordered items:
-  = @order.ordered_items
-%p
-  %strong Recipe ingredients:
-  = @order.recipe_ingredients
-= link_to 'Edit', edit_order_path(@order)
-|
-= link_to 'Back', orders_path
+Created on
+= @order.created_at
+%br
+
+- if @order.error_messages.blank?
+  There were errors processing the order
+  %br
+  = @order.error_messages
+
+= link_to "All Orders", orders_path

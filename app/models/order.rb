@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
-  serialize :ordered_items, Array
-  serialize :recipe_ingredients, Array
+  belongs_to :user
 end

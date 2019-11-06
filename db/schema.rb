@@ -10,16 +10,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_27_223035) do
+ActiveRecord::Schema.define(version: 2019_11_06_214728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "orders", force: :cascade do |t|
-    t.text "ordered_items"
-    t.text "recipe_ingredients"
+  create_table "groceries", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.string "sanitized_name", null: false
+    t.float "container_count"
+    t.float "container_amount"
+    t.float "total_amount"
+    t.string "unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_groceries_on_order_id"
+  end
+
+  create_table "ordered_items", force: :cascade do |t|
+    t.bigint "grocery_id", null: false
+    t.string "name", null: false
+    t.boolean "buy_again?", default: false, null: false
+    t.float "price"
+    t.float "total_amount"
+    t.float "unit"
+    t.float "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["grocery_id"], name: "index_ordered_items_on_grocery_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "error_messages"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -41,4 +67,7 @@ ActiveRecord::Schema.define(version: 2019_10_27_223035) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "groceries", "orders", on_delete: :cascade
+  add_foreign_key "ordered_items", "groceries", on_delete: :cascade
+  add_foreign_key "orders", "users", on_delete: :cascade
 end
