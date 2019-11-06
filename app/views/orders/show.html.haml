@@ -1,0 +1,10 @@
+%p#notice= notice
+%p
+  %strong Ordered items:
+  = @order.ordered_items
+%p
+  %strong Recipe ingredients:
+  = @order.recipe_ingredients
+= link_to 'Edit', edit_order_path(@order)
+|
+= link_to 'Back', orders_path

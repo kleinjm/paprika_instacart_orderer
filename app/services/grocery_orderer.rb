@@ -9,7 +9,7 @@ class GroceryOrderer
   end
 
   def call
-    ordered_items = order_groceries
+    order_groceries
 
     report_errors
   end

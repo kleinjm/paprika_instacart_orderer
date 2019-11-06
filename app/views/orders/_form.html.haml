@@ -1,0 +1,17 @@
+= form_with(model: order, local: true) do |form|
+  - if order.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(order.errors.count, "error")
+        prohibited this order from being saved:
+      %ul
+        - order.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = form.label :ordered_items
+    = form.text_area :ordered_items
+  .field
+    = form.label :recipe_ingredients
+    = form.text_area :recipe_ingredients
+  .actions
+    = form.submit

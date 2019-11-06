@@ -40,5 +40,5 @@ chdir APP_ROOT do
   system! "pre-commit install"
 
   puts "\n== Yarn =="
-  system! "yarn install"
+  system! "nvm use && yarn install"
 end

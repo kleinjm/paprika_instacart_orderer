@@ -13,20 +13,20 @@ class OrdersController < ApplicationController
 
   def create
     # Run with DEBUG=true for some more stats
-    @order = GroceryOrderer.new(user: current_user)
+    GroceryOrderer.new(user: current_user).call
 
-    respond_to do |format|
-      if @order.save
-        format.html do
-          redirect_to @order, notice: "Order was successfully created."
-        end
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new }
-        format.json do
-          render json: @order.errors, status: :unprocessable_entity
-        end
-      end
-    end
+    # respond_to do |format|
+    #   if @order.save
+    #     format.html do
+    #       redirect_to @order, notice: "Order was successfully created."
+    #     end
+    #     format.json { render :show, status: :created, location: @order }
+    #   else
+    #     format.html { render :new }
+    #     format.json do
+    #       render json: @order.errors, status: :unprocessable_entity
+    #     end
+    #   end
+    # end
   end
 end

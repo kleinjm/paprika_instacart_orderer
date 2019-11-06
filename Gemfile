@@ -7,6 +7,7 @@ ruby "2.6.1"
 
 gem "bootsnap", ">= 1.1.0", require: false
 gem "devise"
+gem "haml-rails"
 gem "ingreedy"
 gem "instacart_api", path: "../instacart_api"
 gem "jbuilder", "~> 2.5"
