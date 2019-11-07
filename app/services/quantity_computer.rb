@@ -9,8 +9,6 @@ class QuantityComputer
   end
 
   def call
-    info_log if ENV.fetch("DEBUG", false)
-
     if grocery.unit == item_unit
       return (grocery.total_amount / item_container_amount).ceil
     end
@@ -44,20 +42,5 @@ class QuantityComputer
           amount: 1, container_amount: 1, container_unit: nil, unit: nil
         )
       end
-  end
-
-  def info_log
-    puts "grocery.name", grocery.name
-    puts "grocery.sanitized_name", grocery.sanitized_name
-    puts "grocery.ingredient", grocery.ingredient
-    puts "grocery.quantity", grocery.quantity
-    puts "grocery.total_amount", grocery.total_amount
-    puts "item_container_amount", item_container_amount
-    puts "item.size", item.size
-    puts "item.unit", item.unit
-
-    puts item.name # not required for tests
-    puts "grocery.unit", grocery.unit
-    puts "item_unit", item_unit
   end
 end

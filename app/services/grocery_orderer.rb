@@ -2,7 +2,6 @@
 
 require "instacart_api"
 
-# Run with DEBUG=true for some more stats
 class GroceryOrderer
   def initialize(user:)
     @user = user
@@ -13,8 +12,10 @@ class GroceryOrderer
     @order = Order.create(user_id: user.id)
     order_groceries
 
-    report_errors
+    record_errors
     order
+  rescue StandardError => e
+    order.update(error_messages: e)
   end
 
   private
@@ -112,11 +113,10 @@ class GroceryOrderer
     @unpurchased_groceries = GroceryImporter.call.reject(&:purchased)
   end
 
-  def report_errors
+  def record_errors
     return if failures.none?
 
-    puts "**Failure log**"
-    failures.each { |failure| puts failure }
+    order.update(error_messages: failures)
   end
 
   def insta_client
