@@ -1,13 +1,17 @@
 %p#notice= notice
 %h1 Orders
-%table
+%table.table
   %thead
     %tr
-      %th Orders
+      %th Date and Time
+      %th
   %tbody
     - @orders.each do |order|
       %tr
-        %td= link_to order.created_at, order
+        %td= link_to order.created_at_pretty, order
+        %td
+          = form_tag order_path(order), method: :delete do
+            = submit_tag "Delete"
 %br/
 = form_tag orders_path do
   = submit_tag "Order groceries"

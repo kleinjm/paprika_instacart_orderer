@@ -1,9 +1,42 @@
 %p#notice= notice
 Created on
-= @order.created_at
+= @order.created_at_pretty
 %br
 
-- if @order.error_messages.blank?
+%h2 Grocery to Ordered Items Mapping
+%table.table
+  %thead
+    %tr
+      %th Grocery Name
+      %th Count
+      %th Container Amount
+      %th Total Amount
+      %th Unit
+
+      %th Ordered Item Name
+      %th Previously Purchased
+      %th Price
+      %th Total Amount
+      %th Unit
+      %th Size
+  %tbody
+    - @order.grocery_items.each do |grocery|
+      %tr
+        %td= grocery.sanitized_name
+        %td= grocery.container_count
+        %td= grocery.container_amount
+        %td= grocery.total_amount
+        %td= grocery.unit
+
+        %td= grocery.ordered_item&.name
+        %td= grocery.ordered_item&.previously_purchased
+        %td= grocery.ordered_item&.price
+        %td= grocery.ordered_item&.total_amount
+        %td= grocery.ordered_item&.unit
+        %td= grocery.ordered_item&.size
+%br
+
+- if @order.error_messages.present?
   There were errors processing the order
   %br
   = @order.error_messages

@@ -22,13 +22,24 @@ class GroceryOrderer
   attr_reader :failures, :user, :order
 
   def order_groceries
-    ordered_items = []
-
     unpurchased_groceries.each do |grocery|
-      # [unpurchased_groceries.first].each do |grocery|
-      ordered_items << order_grocery(grocery: grocery)
+      ordered_item = order_grocery(grocery: grocery)
+      order.grocery_items.create!(
+        sanitized_name: grocery.sanitized_name,
+        container_count: grocery.container_count,
+        container_amount: grocery.container_amount,
+        total_amount: grocery.total_amount,
+        unit: grocery.unit,
+        ordered_item_attributes: {
+          name: ordered_item.name,
+          previously_purchased: ordered_item.buy_again?,
+          price: ordered_item.price,
+          total_amount: ordered_item.total_amount,
+          unit: ordered_item.unit,
+          size: ordered_item.size
+        }
+      )
     end
-    ordered_items.flatten
   end
 
   def order_grocery(grocery:)
@@ -44,10 +55,7 @@ class GroceryOrderer
 
     insta_client.add_item_to_cart(item_id: item.id, quantity: quantity)
 
-    {
-      grocery: grocery.to_h,
-      item: item.to_h
-    }
+    item
   rescue StandardError => e
     failures << Failure.new(
       name: grocery.sanitized_name,

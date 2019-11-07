@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_214728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "groceries", force: :cascade do |t|
+  create_table "grocery_items", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.string "sanitized_name", null: false
     t.float "container_count"
@@ -24,20 +24,20 @@ ActiveRecord::Schema.define(version: 2019_11_06_214728) do
     t.string "unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_groceries_on_order_id"
+    t.index ["order_id"], name: "index_grocery_items_on_order_id"
   end
 
   create_table "ordered_items", force: :cascade do |t|
-    t.bigint "grocery_id", null: false
+    t.bigint "grocery_item_id", null: false
     t.string "name", null: false
-    t.boolean "buy_again?", default: false, null: false
+    t.boolean "previously_purchased", default: false, null: false
     t.float "price"
     t.float "total_amount"
     t.float "unit"
     t.float "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["grocery_id"], name: "index_ordered_items_on_grocery_id"
+    t.index ["grocery_item_id"], name: "index_ordered_items_on_grocery_item_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_214728) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "groceries", "orders", on_delete: :cascade
-  add_foreign_key "ordered_items", "groceries", on_delete: :cascade
+  add_foreign_key "grocery_items", "orders", on_delete: :cascade
+  add_foreign_key "ordered_items", "grocery_items", on_delete: :cascade
   add_foreign_key "orders", "users", on_delete: :cascade
 end
