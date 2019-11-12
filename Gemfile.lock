@@ -1,5 +1,6 @@
-PATH
-  remote: ../instacart_api
+GIT
+  remote: git://github.com/kleinjm/instacart_api.git
+  revision: 7eaab382a3f3e0f23a42bf522064ae2934442065
   specs:
     instacart_api (0.1.6)
 
