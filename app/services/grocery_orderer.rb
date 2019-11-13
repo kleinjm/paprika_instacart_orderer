@@ -16,6 +16,7 @@ class GroceryOrderer
     order
   rescue StandardError => e
     order.update(error_messages: e)
+    order
   end
 
   private
