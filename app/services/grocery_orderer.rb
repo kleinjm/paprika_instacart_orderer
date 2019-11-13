@@ -25,21 +25,7 @@ class GroceryOrderer
   def order_groceries
     unpurchased_groceries.each do |grocery|
       ordered_item = order_grocery(grocery: grocery)
-      order.grocery_items.create!(
-        sanitized_name: grocery.sanitized_name,
-        container_count: grocery.container_count,
-        container_amount: grocery.container_amount,
-        total_amount: grocery.total_amount,
-        unit: grocery.unit,
-        ordered_item_attributes: {
-          name: ordered_item.name,
-          previously_purchased: ordered_item.buy_again?,
-          price: ordered_item.price,
-          total_amount: ordered_item.total_amount,
-          unit: ordered_item.unit,
-          size: ordered_item.size
-        }
-      )
+      create_grocery_item(grocery: grocery, ordered_item: ordered_item)
     end
   end
 
@@ -64,6 +50,24 @@ class GroceryOrderer
       error: "Failure ordering grocery: #{e}"
     )
     nil
+  end
+
+  def create_grocery_item(grocery:, ordered_item:)
+    order.grocery_items.create!(
+      sanitized_name: grocery.sanitized_name,
+      container_count: grocery.container_count,
+      container_amount: grocery.container_amount,
+      total_amount: grocery.total_amount,
+      unit: grocery.unit,
+      ordered_item_attributes: {
+        name: ordered_item.name,
+        previously_purchased: ordered_item.buy_again?,
+        price: ordered_item.price,
+        total_amount: ordered_item.total_amount,
+        unit: ordered_item.unit,
+        size: ordered_item.size
+      }
+    )
   end
 
   def search_grocery(grocery:)
