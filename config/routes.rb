@@ -14,4 +14,6 @@ Rails.application.routes.draw do
   end
 
   resources :orders, only: [:create, :index, :show, :destroy]
+
+  root to: "orders#index"
 end
