@@ -10,7 +10,7 @@
             %a.nav-link.disabled
               = current_user.email
           %li.nav-item
-            = form_tag destroy_user_session_path do
+            = form_tag destroy_user_session_path, method: :delete do
               = submit_tag "Logout", class: "nav-link"
           %li.nav-item
             = link_to "Account settings", edit_user_registration_path, class: "nav-link"
