@@ -31,14 +31,14 @@ class GroceryImporter
 
     def generate_groceries_json
       if Rails.env.production?
-        raise "Node not configured to run #{JS_FETCH_GROCERIES_SCRIPT}"
+        `node #{JS_FETCH_GROCERIES_SCRIPT}`
+      else
+        node_version = File.read(".nvmrc").strip
+
+        # rubocop:disable Metrics/LineLength
+        `$HOME/.nvm/versions/node/v#{node_version}/bin/node #{JS_FETCH_GROCERIES_SCRIPT}`
+        # rubocop:enable Metrics/LineLength
       end
-
-      node_version = File.read(".nvmrc").strip
-
-      # rubocop:disable Metrics/LineLength
-      `$HOME/.nvm/versions/node/v#{node_version}/bin/node #{JS_FETCH_GROCERIES_SCRIPT}`
-      # rubocop:enable Metrics/LineLength
     end
 
     def delete_grocery_file
