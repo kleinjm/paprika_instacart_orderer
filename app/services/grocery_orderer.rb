@@ -115,7 +115,8 @@ class GroceryOrderer
   def unpurchased_groceries
     return @unpurchased_groceries if defined?(@unpurchased_groceries)
 
-    @unpurchased_groceries = GroceryImporter.call.reject(&:purchased)
+    @unpurchased_groceries =
+      GroceryImporter.call(user: user).reject(&:purchased)
   end
 
   def record_errors

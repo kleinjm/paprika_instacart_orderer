@@ -13,8 +13,8 @@ class GroceryImporter
   JS_FETCH_GROCERIES_SCRIPT = Rails.root.join("lib", "fetch-groceries.js")
 
   class << self
-    def call
-      generate_groceries_json
+    def call(user:)
+      generate_groceries_json(user: user)
 
       raw_file = File.read(GROCERIES_JSON)
       JSON.parse(raw_file).map do |grocery_json|
@@ -29,14 +29,14 @@ class GroceryImporter
 
     private
 
-    def generate_groceries_json
+    def generate_groceries_json(user:)
       if Rails.env.production?
-        `node #{JS_FETCH_GROCERIES_SCRIPT}`
-      else
+        `node #{JS_FETCH_GROCERIES_SCRIPT} #{user.paprika_credentials}`
+      elsif Rails.env.development?
         node_version = File.read(".nvmrc").strip
 
         # rubocop:disable Metrics/LineLength
-        `$HOME/.nvm/versions/node/v#{node_version}/bin/node #{JS_FETCH_GROCERIES_SCRIPT}`
+        `$HOME/.nvm/versions/node/v#{node_version}/bin/node #{JS_FETCH_GROCERIES_SCRIPT} #{user.paprika_credentials}`
         # rubocop:enable Metrics/LineLength
       end
     end
