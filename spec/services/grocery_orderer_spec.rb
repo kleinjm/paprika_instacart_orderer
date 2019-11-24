@@ -9,7 +9,7 @@ RSpec.describe GroceryOrderer do
       stub_item_selector
       stub_quantity_computer
 
-      user = build_stubbed :user
+      user = create(:user)
       orderer = described_class.new(user: user)
       order = orderer.call
 
@@ -24,13 +24,23 @@ RSpec.describe GroceryOrderer do
 
   def stub_item_selector
     item_selector = instance_double ItemSelector
-    item = double :item, id: 1
+    item = double(
+      :item,
+      id: 1,
+      name: "test item",
+      buy_again?: true,
+      price: 22.33,
+      total_amount: 3,
+      unit: "cups",
+      size: 10
+    )
     allow(item_selector).to receive(:call).and_return(item)
     allow(ItemSelector).to receive(:new).and_return(item_selector)
   end
 
   def stub_quantity_computer
     quantity_computer = instance_double QuantityComputer
+    allow(quantity_computer).to receive(:call).and_return(1)
     allow(QuantityComputer).to receive(:new).and_return(quantity_computer)
   end
 
