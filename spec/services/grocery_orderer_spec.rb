@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe GroceryOrderer do
   describe "#call" do
     it "creates an order object and orders groceries" do
-      stub_instacart_api
+      stub_instacart_api_client
       stub_item_selector
       stub_quantity_computer
 
@@ -15,9 +15,16 @@ RSpec.describe GroceryOrderer do
 
       expect(order)
     end
+
+    it "returns standard errors if order fails and isn't persisted" do
+      orderer = described_class.new(user: nil)
+      order = orderer.call
+
+      expect(order)
+    end
   end
 
-  def stub_instacart_api
+  def stub_instacart_api_client
     allow(InstacartApi::Client).
       to receive(:new).and_return(MockInstacartApiClient.new)
   end

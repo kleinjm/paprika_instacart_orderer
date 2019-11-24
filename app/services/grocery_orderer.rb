@@ -15,6 +15,8 @@ class GroceryOrderer
     record_errors
     order
   rescue StandardError => e
+    return e unless order.present?
+
     order.update(error_messages: e)
     order
   end
