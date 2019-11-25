@@ -9,7 +9,7 @@ class GroceryOrderer
   end
 
   def call
-    @order = Order.create(user_id: user.id)
+    @order = Order.create!(user_id: user.id)
     order_groceries
 
     record_errors

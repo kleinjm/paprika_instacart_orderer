@@ -13,14 +13,27 @@ RSpec.describe GroceryOrderer do
       orderer = described_class.new(user: user)
       order = orderer.call
 
-      expect(order)
+      expect(order).to be_persisted
+      expect(order.user).to eq(user)
+      expect(order.error_messages).to be_nil
     end
 
     it "returns standard errors if order fails and isn't persisted" do
       orderer = described_class.new(user: nil)
+      result = orderer.call
+
+      expect(result).to be_a(StandardError)
+    end
+
+    it "saves errors to error messages when there is a failure" do
+      user = create(:user)
+      allow(GroceryImporter).to receive(:call).and_raise("Some error")
+
+      orderer = described_class.new(user: user)
       order = orderer.call
 
-      expect(order)
+      expect(order).to be_persisted
+      expect(order.error_messages).to eq("Some error")
     end
   end
 
