@@ -8,6 +8,7 @@ class GroceryOrderer
     @failures = []
   end
 
+  # returns an order which may have error_messages or throws an error
   def call
     @order = Order.create!(user_id: user.id)
     order_groceries
@@ -52,7 +53,7 @@ class GroceryOrderer
       type: :generic,
       error: "Failure ordering grocery: #{e}"
     )
-    nil
+    raise e
   end
 
   def create_grocery_item(grocery:, ordered_item:)

@@ -35,6 +35,19 @@ RSpec.describe GroceryOrderer do
       expect(order).to be_persisted
       expect(order.error_messages).to eq("Some error")
     end
+
+    it "catches errors ordering groceries" do
+      mock_client = instance_double InstacartApi::Client
+      allow(mock_client).to receive(:search).and_raise("SEARCH ERROR")
+      allow(InstacartApi::Client).to receive(:new).and_return(mock_client)
+
+      user = create(:user)
+      orderer = described_class.new(user: user)
+      order = orderer.call
+
+      expect(order).to be_persisted
+      expect(order.error_messages).to eq("SEARCH ERROR")
+    end
   end
 
   def stub_instacart_api_client
