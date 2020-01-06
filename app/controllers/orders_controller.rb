@@ -14,6 +14,7 @@ class OrdersController < ApplicationController
   end
 
   def create
+    # TODO: take in an Order id. Have an unprocessed state
     OrderGroceriesWorker.perform_async(current_user.id)
 
     respond_to do |format|
