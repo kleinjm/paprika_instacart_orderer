@@ -17,7 +17,7 @@ gem "puma", "~> 4.3"
 gem "rails", "~> 5.2.3"
 gem "rubocop"
 gem "sass-rails", "~> 5.0"
-gem "sidekiq"
+gem "sidekiq", "5.2.7"
 
 group :development, :test do
   gem "pre-commit"
