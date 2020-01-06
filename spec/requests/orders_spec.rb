@@ -32,4 +32,20 @@ RSpec.describe "orders" do
         to include("Created on #{presenter.created_at_pretty}")
     end
   end
+
+  describe "POST /orders" do
+    it "queues order processing" do
+      user = sign_in_user
+
+      allow(OrderGroceriesWorker).to receive(:perform_async)
+
+      post orders_path
+
+      expect(OrderGroceriesWorker).
+        to have_received(:perform_async).with(user.id)
+
+      expect(flash[:notice]).to eq("Order was successfully queued")
+      expect(response).to redirect_to(orders_path)
+    end
+  end
 end

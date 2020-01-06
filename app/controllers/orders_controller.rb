@@ -14,11 +14,11 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = GroceryOrderer.new(user: current_user).call
+    OrderGroceriesWorker.perform_async(current_user.id)
 
     respond_to do |format|
       format.html do
-        redirect_to @order, notice: "Order was successfully created"
+        redirect_to orders_path, notice: "Order was successfully queued"
       end
     end
   end

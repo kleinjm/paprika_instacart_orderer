@@ -17,6 +17,7 @@ gem "puma", "~> 4.3"
 gem "rails", "~> 5.2.3"
 gem "rubocop"
 gem "sass-rails", "~> 5.0"
+gem "sidekiq"
 
 group :development, :test do
   gem "pre-commit"
@@ -26,6 +27,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "foreman"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
@@ -35,6 +37,7 @@ end
 group :test do
   gem "factory_bot_rails"
   gem "rspec-rails"
+  gem "rspec-sidekiq"
   gem "simplecov", require: false
   gem "webmock"
 end
