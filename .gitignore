@@ -27,3 +27,6 @@
 /config/master.key
 
 coverage
+
+# redis
+dump.rdb
