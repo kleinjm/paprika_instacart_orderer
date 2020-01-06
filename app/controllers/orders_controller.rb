@@ -4,11 +4,13 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @orders = Order.where(user_id: current_user.id).order(created_at: :desc)
+    @order_presenters = OrderPresenter.from_orders(
+      Order.where(user_id: current_user.id).order(created_at: :desc)
+    )
   end
 
   def show
-    @order = Order.find(params[:id])
+    @order = OrderPresenter.new(order: Order.find(params[:id]))
   end
 
   def create

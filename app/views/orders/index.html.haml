@@ -6,13 +6,13 @@
       %th Date and Time
       %th
   %tbody
-    - @orders.each do |order|
+    - @order_presenters.each do |order_presenter|
       %tr
-        %td= link_to order.created_at_pretty,
-          order,
+        %td= link_to order_presenter.created_at_pretty,
+          order_presenter.order,
           "data-test-created-at" => ""
         %td
-          = form_tag order_path(order), method: :delete do
+          = form_tag order_path(order_presenter.order), method: :delete do
             = submit_tag "Delete"
 %br/
 = form_tag orders_path do

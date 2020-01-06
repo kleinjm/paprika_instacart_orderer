@@ -14,6 +14,10 @@ class OrderPresenter
     @order = order
   end
 
+  def self.from_orders(orders)
+    orders.map { |order| new(order: order) }
+  end
+
   def created_at_pretty
     created_at.strftime("%l:%M%P on %b %e %Y")
   end
