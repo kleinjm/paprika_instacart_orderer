@@ -8,7 +8,9 @@
   %tbody
     - @orders.each do |order|
       %tr
-        %td= link_to order.created_at_pretty, order
+        %td= link_to order.created_at_pretty,
+          order,
+          "data-test-created-at" => ""
         %td
           = form_tag order_path(order), method: :delete do
             = submit_tag "Delete"
