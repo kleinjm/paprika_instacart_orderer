@@ -10,7 +10,8 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = OrderPresenter.new(order: Order.find(params[:id]))
+    order = Order.find_by!(id: params[:id], user_id: current_user.id)
+    @order_presenter = OrderPresenter.new(order: order)
   end
 
   def create

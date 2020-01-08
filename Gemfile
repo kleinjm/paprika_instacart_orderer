@@ -38,6 +38,6 @@ group :test do
   gem "factory_bot_rails"
   gem "rspec-rails"
   gem "rspec-sidekiq"
-  gem "simplecov", require: false
+  gem "simplecov", ">= 0.18.0.beta1", require: false
   gem "webmock"
 end

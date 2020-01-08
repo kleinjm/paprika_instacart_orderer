@@ -48,4 +48,16 @@ RSpec.describe "orders" do
       expect(response).to redirect_to(orders_path)
     end
   end
+
+  describe "DELETE /orders/:id" do
+    it "queues order processing" do
+      user = sign_in_user
+      order = create(:order, user: user)
+
+      delete order_path(order)
+
+      expect(flash[:notice]).to eq("Order was successfully deleted")
+      expect(response).to redirect_to(orders_path)
+    end
+  end
 end

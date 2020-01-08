@@ -1,5 +1,5 @@
 %p#notice= notice
-= "Created on #{@order.created_at_pretty}"
+= "Created on #{@order_presenter.created_at_pretty}"
 %br
 
 %h2 Grocery to Ordered Items Mapping
@@ -19,7 +19,7 @@
       %th Unit
       %th Size
   %tbody
-    - @order.grocery_items.each do |grocery|
+    - @order_presenter.grocery_items.each do |grocery|
       %tr
         %td= grocery.sanitized_name
         %td= grocery.container_count
@@ -35,10 +35,10 @@
         %td= grocery.ordered_item&.size
 %br
 
-- if @order.error_messages.present?
+- if @order_presenter.error_messages.present?
   There were errors processing the order
   %br
-  = @order.error_messages
+  = @order_presenter.error_messages
 
 %br
 = link_to "All Orders", orders_path
