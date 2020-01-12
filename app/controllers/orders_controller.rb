@@ -15,13 +15,11 @@ class OrdersController < ApplicationController
   end
 
   def create
-    # TODO: take in an Order id. Have an unprocessed state
-    OrderGroceriesWorker.perform_async(current_user.id)
+    order = Order.create!(user: current_user)
+    OrderGroceriesWorker.perform_async(order.id)
 
     respond_to do |format|
-      format.html do
-        redirect_to orders_path, notice: "Order was successfully queued"
-      end
+      format.html { redirect_to order_path(order), notice: t(".notice") }
     end
   end
 

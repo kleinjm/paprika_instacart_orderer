@@ -3,9 +3,9 @@
 class OrderGroceriesWorker
   include Sidekiq::Worker
 
-  def perform(user_id)
-    user = User.find(user_id)
+  def perform(order_id)
+    order = Order.find(order_id)
 
-    GroceryOrderer.new(user: user).call
+    GroceryOrderer.new(order: order).call
   end
 end

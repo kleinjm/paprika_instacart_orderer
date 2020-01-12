@@ -4,35 +4,23 @@ require "rails_helper"
 
 RSpec.describe GroceryOrderer do
   describe "#call" do
-    it "creates an order object and orders groceries" do
+    it "orders groceries" do
       stub_instacart_api_client
       stub_item_selector
       stub_quantity_computer
 
-      user = create(:user)
-      orderer = described_class.new(user: user)
-      order = orderer.call
+      order = create(:order)
+      described_class.new(order: order)
 
-      expect(order).to be_persisted
-      expect(order.user).to eq(user)
       expect(order.error_messages).to be_nil
     end
 
-    it "returns standard errors if order fails and isn't persisted" do
-      orderer = described_class.new(user: nil)
-      result = orderer.call
-
-      expect(result).to be_a(StandardError)
-    end
-
     it "saves errors to error messages when there is a failure" do
-      user = create(:user)
       allow(GroceryImporter).to receive(:call).and_raise("Some error")
 
-      orderer = described_class.new(user: user)
-      order = orderer.call
+      order = create(:order)
+      described_class.new(order: order).call
 
-      expect(order).to be_persisted
       expect(order.error_messages).to eq("Some error")
     end
 
@@ -41,11 +29,9 @@ RSpec.describe GroceryOrderer do
       allow(mock_client).to receive(:search).and_raise("SEARCH ERROR")
       allow(InstacartApi::Client).to receive(:new).and_return(mock_client)
 
-      user = create(:user)
-      orderer = described_class.new(user: user)
-      order = orderer.call
+      order = create(:order)
+      described_class.new(order: order).call
 
-      expect(order).to be_persisted
       expect(order.error_messages).to eq("SEARCH ERROR")
     end
   end

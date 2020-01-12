@@ -3,14 +3,14 @@
 require "instacart_api"
 
 class GroceryOrderer
-  def initialize(user:)
-    @user = user
+  def initialize(order:)
     @failures = []
+    @order = order
+    @user = order.user
   end
 
   # returns an order which may have error_messages or throws an error
   def call
-    @order = Order.create!(user_id: user.id)
     order_groceries
 
     record_errors

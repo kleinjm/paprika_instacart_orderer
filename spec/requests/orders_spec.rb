@@ -41,11 +41,12 @@ RSpec.describe "orders" do
 
       post orders_path
 
+      order = user.orders.last
       expect(OrderGroceriesWorker).
-        to have_received(:perform_async).with(user.id)
+        to have_received(:perform_async).with(order.id)
 
-      expect(flash[:notice]).to eq("Order was successfully queued")
-      expect(response).to redirect_to(orders_path)
+      expect(flash[:notice]).to eq(I18n.t("orders.create.notice"))
+      expect(response).to redirect_to(order_path(order))
     end
   end
 

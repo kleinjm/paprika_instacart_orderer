@@ -6,15 +6,15 @@ RSpec.describe OrderGroceriesWorker do
   describe "#perform" do
     it "calls the GroceryOrderer with the order of the given id" do
       Sidekiq::Testing.inline! do
-        user = create(:user)
+        order = create(:order)
 
         orderer = instance_double GroceryOrderer
         allow(GroceryOrderer).to receive(:new).and_return(orderer)
         allow(orderer).to receive(:call)
 
-        OrderGroceriesWorker.perform_async(user.id)
+        OrderGroceriesWorker.perform_async(order.id)
 
-        expect(GroceryOrderer).to have_received(:new).with(user: user)
+        expect(GroceryOrderer).to have_received(:new).with(order: order)
         expect(orderer).to have_received(:call)
       end
     end

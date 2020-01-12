@@ -35,10 +35,11 @@
         %td= grocery.ordered_item&.size
 %br
 
-- if @order_presenter.error_messages.present?
-  There were errors processing the order
-  %br
-  = @order_presenter.error_messages
+%p.text-center
+  - if @order_presenter.error_messages.present?
+    There were errors processing the order
+    %br
+    = @order_presenter.error_messages
 
 %br
 = link_to "All Orders", orders_path
