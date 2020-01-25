@@ -25,13 +25,13 @@ RSpec.describe GroceryOrderer do
       expect(grocery_item.total_amount).to eq(1)
     end
 
-    it "saves errors to error messages when there is a failure" do
+    it "saves errors to error_messages when there is a failure" do
       allow(GroceryImporter).to receive(:call).and_raise("Some error")
 
       order = create(:order)
       described_class.new(order: order).call
 
-      expect(order.error_messages).to eq("Some error")
+      expect(order.error_messages).to eq(["Some error"])
     end
 
     it "catches errors ordering groceries" do
@@ -45,7 +45,7 @@ RSpec.describe GroceryOrderer do
       order = create(:order)
       described_class.new(order: order).call
 
-      expect(order.error_messages).to eq("SEARCH ERROR")
+      expect(order.error_messages).to eq(["SEARCH ERROR"])
     end
   end
 

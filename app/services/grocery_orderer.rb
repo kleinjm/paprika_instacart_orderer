@@ -2,9 +2,16 @@
 
 require "instacart_api"
 
+# Takes in a persisted instance of an Order.
+# Iterates over all unpurchased Groceries from Paprika.
+# For each Grocery, searches Instacart, selects an optimal Item, and adds the
+# Item to the cart.
+#
+# Handles errors by saving them to the Order.error_messages.
+# Returns the given Order instance.
 class GroceryOrderer
   def initialize(order:)
-    @failures = []
+    @failures = [] # TODO: clean up error handling
     @order = order
     @user = order.user
   end
@@ -18,7 +25,7 @@ class GroceryOrderer
   rescue StandardError => e
     return e unless order.present?
 
-    order.update(error_messages: e)
+    order.update(error_messages: [e.message])
     order
   end
 
@@ -116,8 +123,7 @@ class GroceryOrderer
   end
 
   def unpurchased_groceries
-    @unpurchased_groceries =
-      GroceryImporter.call(user: user).reject(&:purchased)
+    GroceryImporter.call(user: user).reject(&:purchased)
   end
 
   def record_errors
