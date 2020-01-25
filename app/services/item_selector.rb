@@ -9,7 +9,7 @@ class ItemSelector
   # Finds the best item by
   # 1. filtering items previously purchased
   # 2. filtering items matching name
-  # 3. CASE 1 selecting cheapest item matching name
+  # 3. CASE 1 selecting cheapest item matching name and previously purchased
   # 4. CASE 2 selecting cheapest previously purchased item
   # 5. CASE 3 selecting cheapest non-previously purchased item
   def call
@@ -25,19 +25,10 @@ class ItemSelector
     never_purchased = search_results.reject(&:buy_again?)
     return never_purchased.min if never_purchased.any?
 
-    report_failure
     nil
   end
 
   private
 
   attr_reader :grocery, :search_results
-
-  def report_failure
-    failures << Failure.new(
-      name: grocery.sanitized_name,
-      type: :item,
-      error: "No matching item for grocery"
-    )
-  end
 end
