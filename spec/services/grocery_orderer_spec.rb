@@ -9,6 +9,9 @@ RSpec.describe GroceryOrderer do
       stub_item_selector
       stub_quantity_computer
 
+      groceries = [Grocery.new(ingredient: "Garlic")]
+      allow(GroceryImporter).to receive(:call).and_return(groceries)
+
       order = create(:order)
       described_class.new(order: order)
 
@@ -25,6 +28,9 @@ RSpec.describe GroceryOrderer do
     end
 
     it "catches errors ordering groceries" do
+      groceries = [Grocery.new(ingredient: "Garlic")]
+      allow(GroceryImporter).to receive(:call).and_return(groceries)
+
       mock_client = instance_double InstacartApi::Client
       allow(mock_client).to receive(:search).and_raise("SEARCH ERROR")
       allow(InstacartApi::Client).to receive(:new).and_return(mock_client)

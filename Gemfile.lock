@@ -243,6 +243,8 @@ GEM
       sprockets-rails
       tilt
     sexp_processor (4.13.0)
+    shoulda-matchers (4.2.0)
+      activesupport (>= 4.2.0)
     sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (>= 1.5.0)
@@ -310,6 +312,7 @@ DEPENDENCIES
   rspec-sidekiq
   rubocop
   sass-rails (~> 5.0)
+  shoulda-matchers
   sidekiq (= 5.2.7)
   simplecov (>= 0.18.0.beta1)
   spring

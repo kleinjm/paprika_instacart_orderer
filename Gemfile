@@ -38,6 +38,7 @@ group :test do
   gem "factory_bot_rails"
   gem "rspec-rails"
   gem "rspec-sidekiq"
+  gem "shoulda-matchers"
   gem "simplecov", ">= 0.18.0.beta1", require: false
   gem "webmock"
 end
