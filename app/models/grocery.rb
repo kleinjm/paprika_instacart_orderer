@@ -33,7 +33,7 @@ class Grocery < OpenStruct
 
   def parsed_ingredient
     @parsed_ingredient ||= Ingreedy.parse(name)
-  rescue Ingreedy::ParseFailed
+  rescue Ingreedy::ParseFailed, ArgumentError
     OpenStruct.new(
       amount: 1, container_amount: 1, container_unit: nil, unit: nil
     )

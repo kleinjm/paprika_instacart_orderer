@@ -88,5 +88,14 @@ RSpec.describe QuantityComputer do
         expect(quantity).to eq(test_case[:result])
       end
     end
+
+    it "rescues and returns 1 for any error" do
+      grocery = double :grocery
+      allow(grocery).to receive(:unit).and_raise("ERROR")
+
+      result = described_class.new(grocery: grocery, item: nil).call
+
+      expect(result).to eq(1)
+    end
   end
 end

@@ -13,9 +13,16 @@ RSpec.describe GroceryOrderer do
       allow(GroceryImporter).to receive(:call).and_return(groceries)
 
       order = create(:order)
-      described_class.new(order: order)
+      described_class.new(order: order).call
 
+      expect(order.grocery_items.count).to eq(1)
       expect(order.error_messages).to be_nil
+
+      grocery_item = order.grocery_items.first
+      expect(grocery_item.sanitized_name).to eq("garlic")
+      expect(grocery_item.container_count).to eq(1)
+      expect(grocery_item.container_amount).to eq(1)
+      expect(grocery_item.total_amount).to eq(1)
     end
 
     it "saves errors to error messages when there is a failure" do
