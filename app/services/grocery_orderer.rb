@@ -11,7 +11,6 @@ require "instacart_api"
 # Returns the given Order instance.
 class GroceryOrderer
   def initialize(order:)
-    @failures = [] # TODO: clean up error handling
     @order = order
     @user = order.user
   end
@@ -20,7 +19,6 @@ class GroceryOrderer
   def call
     order_groceries
 
-    record_errors
     order
   rescue StandardError => e
     return e unless order.present?
@@ -31,7 +29,7 @@ class GroceryOrderer
 
   private
 
-  attr_reader :failures, :user, :order
+  attr_reader :user, :order
 
   def order_groceries
     unpurchased_groceries.each do |grocery|
@@ -55,11 +53,11 @@ class GroceryOrderer
 
     item
   rescue StandardError => e
-    failures << Failure.new(
-      name: grocery.sanitized_name,
-      type: :generic,
-      error: "Failure ordering grocery: #{e}"
-    )
+    # failures << Failure.new(
+    #   name: grocery.sanitized_name,
+    #   type: :generic,
+    #   error: "Failure ordering grocery: #{e}"
+    # )
     raise e
   end
 
@@ -84,31 +82,31 @@ class GroceryOrderer
   def search_grocery(grocery:)
     results = insta_client.search(term: grocery.sanitized_name)
     if results.none?
-      failures << Failure.new(
-        name: grocery.sanitized_name,
-        type: :grocery,
-        error: "No search results for grocery"
-      )
+      # failures << Failure.new(
+      #   name: grocery.sanitized_name,
+      #   type: :grocery,
+      #   error: "No search results for grocery"
+      # )
     end
 
     results
   rescue Net::OpenTimeout
-    failures << Failure.new(
-      name: grocery.sanitized_name,
-      type: :grocery,
-      error: "Instacart api search failure"
-    )
+    # failures << Failure.new(
+    #   name: grocery.sanitized_name,
+    #   type: :grocery,
+    #   error: "Instacart api search failure"
+    # )
   end
 
   def sanitize_results(search_results:)
     search_results.select!(&:available?) # remove unavailable
     return unless search_results.none?
 
-    failures << Failure.new(
-      name: grocery.sanitized_name,
-      type: :grocery,
-      error: "No available search result items found from Instacart"
-    )
+    # failures << Failure.new(
+    #   name: grocery.sanitized_name,
+    #   type: :grocery,
+    #   error: "No available search result items found from Instacart"
+    # )
   end
 
   def compute_quantity(grocery:, item:)
@@ -124,12 +122,6 @@ class GroceryOrderer
 
   def unpurchased_groceries
     GroceryImporter.call(user: user).reject(&:purchased)
-  end
-
-  def record_errors
-    return if failures.none?
-
-    order.update(error_messages: failures)
   end
 
   def insta_client

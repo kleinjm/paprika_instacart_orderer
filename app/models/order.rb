@@ -6,5 +6,9 @@ class Order < ApplicationRecord
 
   validates :user_id, presence: true
 
-  serialize :error_messages
+  serialize :error_messages, Array
+
+  def add_error(error_message)
+    error_messages << error_message
+  end
 end
