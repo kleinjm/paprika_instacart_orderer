@@ -39,7 +39,7 @@
   - if @order_presenter.error_messages.present?
     There were errors processing the order
     %br
-    = @order_presenter.error_messages
+    = @order_presenter.list_errors
 
 %br
 = link_to "All Orders", orders_path

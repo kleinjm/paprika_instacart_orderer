@@ -8,7 +8,11 @@ class Order < ApplicationRecord
 
   serialize :error_messages, Array
 
-  def add_error(error_message)
-    error_messages << error_message
+  delegate :add_error, :list_errors, to: :error_object
+
+  private
+
+  def error_object
+    @error_object ||= OrderErrors.new(self)
   end
 end

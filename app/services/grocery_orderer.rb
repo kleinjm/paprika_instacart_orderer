@@ -17,28 +17,20 @@ class GroceryOrderer
 
   # returns an order which may have error_messages or throws an error
   def call
-    order_groceries
-
-    order
+    unpurchased_groceries.each(&method(:order_grocery))
   rescue StandardError => e
-    return e unless order.present?
-
-    order.update(error_messages: [e.message])
-    order
+    order.add_error(e.inspect)
   end
 
   private
 
   attr_reader :user, :order
 
-  def order_groceries
-    unpurchased_groceries.each do |grocery|
-      ordered_item = order_grocery(grocery: grocery)
-      create_grocery_item(grocery: grocery, ordered_item: ordered_item)
-    end
+  def unpurchased_groceries
+    GroceryImporter.call(user: user).reject(&:purchased)
   end
 
-  def order_grocery(grocery:)
+  def order_grocery(grocery)
     search_results = search_grocery(grocery: grocery)
     sanitize_results(search_results: search_results)
     return if search_results.none?
@@ -51,31 +43,10 @@ class GroceryOrderer
 
     insta_client.add_item_to_cart(item_id: item.id, quantity: quantity)
 
-    item
+    create_grocery_item(grocery: grocery, ordered_item: item)
   rescue StandardError => e
-    # failures << Failure.new(
-    #   name: grocery.sanitized_name,
-    #   type: :generic,
-    #   error: "Failure ordering grocery: #{e}"
-    # )
-    raise e
-  end
-
-  def create_grocery_item(grocery:, ordered_item:)
-    order.grocery_items.create!(
-      sanitized_name: grocery.sanitized_name,
-      container_count: grocery.container_count,
-      container_amount: grocery.container_amount,
-      total_amount: grocery.total_amount,
-      unit: grocery.unit,
-      ordered_item_attributes: {
-        name: ordered_item.name,
-        previously_purchased: ordered_item.buy_again?,
-        price: ordered_item.price,
-        total_amount: ordered_item.total_amount,
-        unit: ordered_item.unit,
-        size: ordered_item.size
-      }
+    order.add_error(
+      "Error ordering grocery", grocery_name: grocery.name, error: e.inspect
     )
   end
 
@@ -98,6 +69,24 @@ class GroceryOrderer
     # )
   end
 
+  def create_grocery_item(grocery:, ordered_item:)
+    order.grocery_items.create!(
+      sanitized_name: grocery.sanitized_name,
+      container_count: grocery.container_count,
+      container_amount: grocery.container_amount,
+      total_amount: grocery.total_amount,
+      unit: grocery.unit,
+      ordered_item_attributes: {
+        name: ordered_item.name,
+        previously_purchased: ordered_item.buy_again?,
+        price: ordered_item.price,
+        total_amount: ordered_item.total_amount,
+        unit: ordered_item.unit,
+        size: ordered_item.size
+      }
+    )
+  end
+
   def sanitize_results(search_results:)
     search_results.select!(&:available?) # remove unavailable
     return unless search_results.none?
@@ -118,10 +107,6 @@ class GroceryOrderer
       search_results: search_results,
       grocery: grocery
     ).call
-  end
-
-  def unpurchased_groceries
-    GroceryImporter.call(user: user).reject(&:purchased)
   end
 
   def insta_client

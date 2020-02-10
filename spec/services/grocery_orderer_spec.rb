@@ -31,21 +31,34 @@ RSpec.describe GroceryOrderer do
       order = create(:order)
       described_class.new(order: order).call
 
-      expect(order.error_messages).to eq(["Some error"])
+      expect(order.list_errors).to eq("#<RuntimeError: Some error>")
     end
 
-    it "catches errors ordering groceries" do
-      groceries = [Grocery.new(name: "1 T Garlic", ingredient: "1 T Garlic")]
-      allow(GroceryImporter).to receive(:call).and_return(groceries)
+    it "catches errors ordering groceries and carries on" do
+      stub_instacart_api_client
+      stub_item_selector
+      stub_quantity_computer
 
-      mock_client = instance_double InstacartApi::Client
-      allow(mock_client).to receive(:search).and_raise("SEARCH ERROR")
-      allow(InstacartApi::Client).to receive(:new).and_return(mock_client)
+      good_grocery = Grocery.new(name: "1 T Garlic", ingredient: "1 T Garlic")
+      error_grocery = Grocery.new(name: "unsearchable name", ingredient: "no")
+      allow(GroceryImporter).to receive(:call).
+        and_return([error_grocery, good_grocery])
 
       order = create(:order)
-      described_class.new(order: order).call
+      orderer = described_class.new(order: order)
 
-      expect(order.error_messages).to eq(["SEARCH ERROR"])
+      allow(orderer).to receive(:search_grocery).
+        with(grocery: good_grocery).and_call_original
+      allow(orderer).to receive(:search_grocery).
+        with(grocery: error_grocery).and_raise("SEARCH ERROR")
+      orderer.call
+
+      expect(order.list_errors).to eq(
+        "Error ordering grocery\n" \
+        "Grocery name: unsearchable name\n"\
+        "Error: #<RuntimeError: SEARCH ERROR>"
+      )
+      expect(order.grocery_items.first.sanitized_name).to eq("1 t garlic")
     end
   end
 
