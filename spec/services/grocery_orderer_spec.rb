@@ -9,7 +9,7 @@ RSpec.describe GroceryOrderer do
       stub_item_selector
       stub_quantity_computer
 
-      groceries = [Grocery.new(name: "1 T Garlic", ingredient: "1 T Garlic")]
+      groceries = [garlic_grocery]
       allow(GroceryImporter).to receive(:call).and_return(groceries)
 
       order = create(:order)
@@ -37,9 +37,8 @@ RSpec.describe GroceryOrderer do
     it "catches errors ordering groceries and carries on" do
       stub_instacart_api_client
       stub_item_selector
-      stub_quantity_computer
 
-      good_grocery = Grocery.new(name: "1 T Garlic", ingredient: "1 T Garlic")
+      good_grocery = garlic_grocery
       error_grocery = Grocery.new(name: "unsearchable name", ingredient: "no")
       allow(GroceryImporter).to receive(:call).
         and_return([error_grocery, good_grocery])
@@ -55,16 +54,52 @@ RSpec.describe GroceryOrderer do
 
       expect(order.list_errors).to eq(
         "Error ordering grocery\n" \
-        "Grocery name: unsearchable name\n"\
+        "Grocery: unsearchable name\n"\
         "Error: #<RuntimeError: SEARCH ERROR>"
       )
       expect(order.grocery_items.first.sanitized_name).to eq("1 t garlic")
     end
+
+    it "records error if no search results are returned for grocery" do
+      stub_instacart_api_client(mock_results: false)
+
+      good_grocery = garlic_grocery
+      allow(GroceryImporter).to receive(:call).and_return([good_grocery])
+
+      order = create(:order)
+      described_class.new(order: order).call
+
+      expect(order.list_errors).to eq(
+        "No search results\n" \
+        "Grocery: 1 T Garlic"
+      )
+    end
+
+    it "records timeout errors" do
+      good_grocery = garlic_grocery
+      allow(GroceryImporter).to receive(:call).and_return([good_grocery])
+
+      insta_client = instance_double InstacartApi::Client
+      allow(InstacartApi::Client).to receive(:new).and_return(insta_client)
+      allow(insta_client).to receive(:search).and_raise(Net::OpenTimeout)
+
+      order = create(:order)
+      described_class.new(order: order).call
+
+      expect(order.list_errors).to eq(
+        "Instacart API timeout\n" \
+        "Grocery: 1 T Garlic"
+      )
+    end
   end
 
-  def stub_instacart_api_client
+  def garlic_grocery
+    Grocery.new(name: "1 T Garlic", ingredient: "1 T Garlic")
+  end
+
+  def stub_instacart_api_client(mock_results: true)
     allow(InstacartApi::Client).
-      to receive(:new).and_return(MockInstacartApiClient.new)
+      to receive(:new).and_return(MockInstacartApiClient.new(mock_results))
   end
 
   def stub_item_selector
@@ -96,10 +131,19 @@ RSpec.describe GroceryOrderer do
       end
     end
 
+    def initialize(mock_results)
+      @mock_results = mock_results
+    end
+
     def search(*)
-      [MockGrocerySearchItem.new]
+      return [MockGrocerySearchItem.new] if mock_results
+      []
     end
 
     def add_item_to_cart(item_id:, quantity:); end
+
+    private
+
+    attr_reader :mock_results
   end
 end

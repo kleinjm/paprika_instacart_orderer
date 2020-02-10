@@ -46,27 +46,19 @@ class GroceryOrderer
     create_grocery_item(grocery: grocery, ordered_item: item)
   rescue StandardError => e
     order.add_error(
-      "Error ordering grocery", grocery_name: grocery.name, error: e.inspect
+      "Error ordering grocery", grocery: grocery.name, error: e.inspect
     )
   end
 
   def search_grocery(grocery:)
     results = insta_client.search(term: grocery.sanitized_name)
-    if results.none?
-      # failures << Failure.new(
-      #   name: grocery.sanitized_name,
-      #   type: :grocery,
-      #   error: "No search results for grocery"
-      # )
-    end
+
+    order.add_error("No search results", grocery: grocery.name) if results.none?
 
     results
-  rescue Net::OpenTimeout
-    # failures << Failure.new(
-    #   name: grocery.sanitized_name,
-    #   type: :grocery,
-    #   error: "Instacart api search failure"
-    # )
+  rescue Net::OpenTimeout # TODO: move to instacart-api gem
+    order.add_error("Instacart API timeout", grocery: grocery.name)
+    []
   end
 
   def create_grocery_item(grocery:, ordered_item:)
