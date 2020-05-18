@@ -104,8 +104,9 @@ class GroceryOrderer
   def insta_client
     @insta_client ||= InstacartApi::Client.new(
       email: @user.instacart_email,
-      password: @user.instacart_password,
-      default_store: @user.instacart_default_store
-    )
+      password: @user.instacart_password
+    ).login
+    @insta_client.default_store = @user.instacart_default_store
+    @insta_client
   end
 end

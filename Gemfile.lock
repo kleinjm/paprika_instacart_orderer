@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/kleinjm/instacart_api.git
-  revision: 7eaab382a3f3e0f23a42bf522064ae2934442065
+  revision: fc471f90529d171adbb7485ac8a0ba898766a813
   specs:
-    instacart_api (0.1.6)
+    instacart_api (0.1.7)
 
 GEM
   remote: https://rubygems.org/
@@ -250,6 +250,9 @@ GEM
       rack (>= 1.5.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 5)
+    simple_form (5.0.2)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
     simplecov (0.18.0.beta1)
       docile (~> 1.1)
       simplecov-html (~> 0.11.0.beta1)
@@ -298,7 +301,7 @@ DEPENDENCIES
   foreman
   haml-rails
   ingreedy
-  instacart_api!
+  instacart_api (= 0.1.7)!
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
@@ -314,6 +317,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   shoulda-matchers
   sidekiq (= 5.2.7)
+  simple_form
   simplecov (>= 0.18.0.beta1)
   spring
   spring-watcher-listen (~> 2.0.0)

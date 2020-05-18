@@ -33,3 +33,6 @@ en:
   orders:
     create:
       notice: Order is being processed. Refresh momentarily to see updates
+  instacart_stores:
+    update:
+      notice: Instacart store updated

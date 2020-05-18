@@ -1,0 +1,4 @@
+%h1 Editing Instacart Store
+= simple_form_for(@user, url: instacart_store_path) do |form|
+  = form.input :instacart_default_store, collection: @store_options
+  = form.button :submit, "Change Store"

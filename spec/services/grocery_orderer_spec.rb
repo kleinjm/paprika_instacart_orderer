@@ -15,8 +15,8 @@ RSpec.describe GroceryOrderer do
       order = create(:order)
       described_class.new(order: order).call
 
-      expect(order.grocery_items.count).to eq(1)
       expect(order.error_messages).to be_blank
+      expect(order.grocery_items.count).to eq(1)
 
       grocery_item = order.grocery_items.first
       expect(grocery_item.sanitized_name).to eq("1 t garlic")

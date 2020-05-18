@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :instacart_stores, only: [:edit, :update]
   resources :orders, only: [:create, :index, :show, :destroy]
 
   root to: "orders#index"
