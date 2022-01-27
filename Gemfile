@@ -17,7 +17,7 @@ gem "puma", "~> 4.3"
 gem "rails", "~> 5.2.3"
 gem "rubocop"
 gem "sass-rails", "~> 5.0"
-gem "sidekiq", "5.2.7"
+gem "sidekiq", "6.4.0"
 gem "simple_form"
 
 group :development, :test do
